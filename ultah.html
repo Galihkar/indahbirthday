@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <!-- Import Google Fonts & Font Awesome untuk Icon -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden; /* Mencegah scroll manual sebelum waktunya */
+            background-color: #1a1a1a;
+            color: white;
+        }
+
+        .container {
+            height: 300vh; /* 3 Halaman */
+            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        section {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Halaman 1 */
+        #page1 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn-open {
+            padding: 12px 35px;
+            font-size: 1.1rem;
+            background: white;
+            color: #f5576c;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-open:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Halaman 2 */
+        #page2 {
+            background: #ffffff;
+            color: #333;
+        }
+
+        .message-box {
+            max-width: 600px;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        /* Animasi Swipe Up Icon */
+        .swipe-icon {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: #f5576c;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translate(-50%, 0);}
+            40% {transform: translate(-50%, -15px);}
+            60% {transform: translate(-50%, -7px);}
+        }
+
+        /* Halaman 3 (Blank) */
+        #page3 {
+            background: #222;
+        }
+
+        .hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 1s all ease-in-out;
+        }
+
+        .show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <!-- Halaman 1 -->
+        <section id="page1">
+            <h1 class="hidden">Happy Birthday!</h1>
+            <button class="btn-open" onclick="nextPage(1)">Open</button>
+        </section>
+
+        <!-- Halaman 2 -->
+        <section id="page2">
+            <div class="message-box">
+                <h2>Untuk Seseorang yang Spesial,</h2>
+                <br>
+                <p>Hari ini bukan sekadar pergantian angka, tapi perayaan betapa luar biasanya dirimu. Semoga di usia yang baru ini, setiap langkahmu dipenuhi kebahagiaan, setiap doamu segera dikabulkan, dan senyummu tidak pernah pudar.</p>
+                <br>
+                <p>Terima kasih sudah menjadi bagian dari cerita hidupku!</p>
+            </div>
+            
+            <div class="swipe-icon" onclick="nextPage(2)">
+                <i class="fa-solid fa-angles-up"></i>
+                <p style="font-size: 0.8rem; margin-top: 5px;">Swipe Up</p>
+            </div>
+        </section>
+
+        <!-- Halaman 3 -->
+        <section id="page3">
+            <!-- Blank page untuk konten selanjutnya -->
+        </section>
+    </div>
+
+    <script>
+        // Memunculkan text Happy Birthday saat load
+        window.onload = () => {
+            document.querySelector('#page1 h1').classList.add('show');
+        };
+
+        function nextPage(currentPage) {
+            const container = document.getElementById('mainContainer');
+            // Geser kontainer ke atas berdasarkan tinggi viewport
+            container.style.transform = `translateY(-${currentPage * 100}vh)`;
+        }
+
+        // Support swipe gesture sederhana untuk mobile
+        let touchstartY = 0;
+        let touchendY = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchstartY = e.changedTouches[0].screenY;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchendY = e.changedTouches[0].screenY;
+            handleGesture();
+        });
+
+        function handleGesture() {
+            if (touchstartY - touchendY > 100) { // Geser ke atas
+                // Logika sederhana: jika di page 2, geser ke 3
+                // (Anda bisa mengembangkan ini dengan counter halaman)
+                const currentTransform = document.getElementById('mainContainer').style.transform;
+                if(currentTransform.includes('100vh')) {
+                    nextPage(2);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
