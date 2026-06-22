@@ -1,183 +1,559 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Happy Birthday!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+    <!-- FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+    <!-- ICON -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Import Library Confetti -->
+
+    <!-- CONFETTI -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; overflow: hidden; background-color: #1a1a1a; color: white; }
 
-        .container {
-            height: 400vh;
-            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
         }
 
-        section {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            position: relative;
+        html,
+        body{
+            width:100%;
+            height:100%;
+            overflow:hidden;
+            font-family:'Poppins', sans-serif;
+            scroll-behavior:smooth;
+            overscroll-behavior:none;
+            background:#1a1a1a;
+        }
+        .container{
+            height:100vh;
+            width:100%;
+            transition:transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        section{
+            width:100%;
+            height:100vh;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            text-align:center;
+            padding:25px;
+            position:relative;
+            opacity:0.4;
+            transition:
+                transform 0.8s cubic-bezier(0.65, 0, 0.35, 1),
+                opacity 0.8s ease;
+        }
+        section.active{
+            opacity:1;
+        }
+        #page1{
+            background:
+                linear-gradient(
+                    135deg,
+                    #f093fb 0%,
+                    #f5576c 100%
+                );
+
+            color:white;
+        }
+        h1{
+            font-family:'Dancing Script', cursive;
+            font-size:4rem;
+            margin-bottom:20px;
+        }
+        h2{
+            font-size:1.3rem;
+            font-weight:300;
+            margin-bottom:20px;
+        }
+        .btn-open{
+            margin-top:30px;
+            padding:15px 40px;
+            border:none;
+            border-radius:50px;
+            background:white;
+            color:#f5576c;
+            font-size:1.1rem;
+            font-weight:600;
+            cursor:pointer;
+            transition:0.3s;
+            box-shadow:
+                0 5px 15px rgba(0,0,0,0.2);
+        }
+        .btn-open:hover{
+            transform:scale(1.05);
+        }
+        .light-page{
+            background:
+                radial-gradient(
+                    circle at top left,
+                    #ffffff,
+                    #ffeef2
+                );
+
+            color:#333;
+        }
+        .pink-page{
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffe0f0,
+                    #ffd1dc,
+                    #ffe8f5
+                );
+
+            color:#f5576c;
+        }
+        .message-box{
+            max-width:700px;
+            line-height:1.9;
+            font-size:1.1rem;
+        }
+        .message-box p{
+            margin-bottom:15px;
+        }
+        .swipe-icon{
+            position:absolute;
+            bottom:30px;
+            left:50%;
+
+            transform:translateX(-50%);
+
+            font-size:2rem;
+            cursor:pointer;
+
+            animation:bounce 2s infinite;
+        }
+        @keyframes bounce{
+            0%,20%,50%,80%,100%{
+                transform:translate(-50%, 0);
+            }
+            40%{
+                transform:translate(-50%, -12px);
+            }
+            60%{
+                transform:translate(-50%, -6px);
+            }
+        }
+        .hidden{
+            opacity:0;
+            transform:translateY(25px);
+            transition:1s ease;
+        }
+        .show{
+            opacity:1;
+            transform:translateY(0);
+        }
+        @media(max-width:768px){
+            h1{
+                font-size:2.8rem;
+            }
+            h2{
+                font-size:1rem;
+            }
+            .message-box{
+                font-size:1rem;
+                line-height:1.8;
+            }
+            .btn-open{
+                padding:13px 30px;
+                font-size:1rem;
+            }
         }
 
-        /* Halaman 1 */
-        #page1 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        h1 { font-family: 'Dancing Script', cursive; font-size: 4.5rem; margin-bottom: 25px; }
+/*floating photo*/
 
-        .btn-open {
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            background: white;
-            color: #f5576c;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-            z-index: 10;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        .floating-photo{
+            position:absolute;
+
+            z-index:2;
+
+            animation:
+                floatMove 4s ease-in-out infinite,
+                headShake 3s ease-in-out infinite;
+
+            filter:
+                drop-shadow(0 10px 20px rgba(0,0,0,0.18));
+
+            pointer-events:none;
         }
 
-        .btn-open:hover { transform: scale(1.05); }
+        .floating-photo img{
+            width:100%;
+            height:100%;
+            object-fit:contain;
 
-        /* Halaman 2 */
-        #page2 { background: #ffffff; color: #333; }
-        .message-box { max-width: 600px; line-height: 1.8; font-size: 1.1rem; padding: 20px; }
-
-        /* Halaman 3 - Warna Lebih Muda */
-        #page3 { background: linear-gradient(135deg, #fce4ff 0%, #ffd1d7 100%); color: #f5576c; }
-
-        /* Icon Swipe Up & Animasi */
-        .swipe-icon {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2.2rem;
-            cursor: pointer;
-            animation: bounce 2s infinite;
+            user-select:none;
+            -webkit-user-drag:none;
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
-            40% { transform: translate(-50%, -15px); }
-            60% { transform: translate(-50%, -7px); }
+/*size*/
+
+        .photo-sm{
+            width:70px;
         }
 
-        .hidden { opacity: 0; transform: translateY(20px); transition: 1s all ease; }
-        .show { opacity: 1; transform: translateY(0); }
+        .photo-md{
+            width:110px;
+        }
+
+        .photo-lg{
+            width:160px;
+        }
+
+/*position*/
+
+        .top-left{
+            top:25px;
+            left:25px;
+        }
+
+        .top-right{
+            top:35px;
+            right:25px;
+        }
+
+        .bottom-left{
+            bottom:30px;
+            left:30px;
+        }
+
+        .bottom-right{
+            bottom:35px;
+            right:30px;
+        }
+
+/*float animation*/
+
+        @keyframes floatMove{
+
+            0%{
+                transform:
+                    translateY(0px);
+            }
+
+            50%{
+                transform:
+                    translateY(-12px);
+            }
+
+            100%{
+                transform:
+                    translateY(0px);
+            }
+        }
+
+/*handshake*/
+
+        @keyframes headShake{
+
+            0%{
+                rotate:-8deg;
+            }
+
+            25%{
+                rotate:8deg;
+            }
+
+            50%{
+                rotate:-5deg;
+            }
+
+            75%{
+                rotate:5deg;
+            }
+
+            100%{
+                rotate:-8deg;
+            }
+        }
+
+/*delay*/
+
+        .delay-1{
+            animation-delay:0s;
+        }
+
+        .delay-2{
+            animation-delay:0.5s;
+        }
+
+        .delay-3{
+            animation-delay:1s;
+        }
+
+        .delay-4{
+            animation-delay:1.5s;
+        }
+
+/*mobile*/
+
+        @media(max-width:768px){
+
+            .photo-lg{
+                width:100px;
+            }
+
+            .photo-md{
+                width:75px;
+            }
+
+            .photo-sm{
+                width:55px;
+            }
+
+            .top-left{
+                top:15px;
+                left:10px;
+            }
+
+            .top-right{
+                top:15px;
+                right:10px;
+            }
+
+            .bottom-left{
+                bottom:15px;
+                left:10px;
+            }
+
+            .bottom-right{
+                bottom:15px;
+                right:10px;
+            }
+        }
+
     </style>
 </head>
 <body>
-
     <div class="container" id="mainContainer">
-        <!-- HALAMAN 1 -->
-        <section id="page1">
+        <section id="page1" class="active">
             <h1 class="hidden">Happy Birthday</h1>
-            <button class="btn-open" onclick="nextPage(1)">Open</button>
+            <h2 class="hidden">to my beautiful sweet heart as always,</h2>
+            <h1 class="hidden">Tri Indahsari Prastina Rumelawati</h1>
+            <button class="btn-open">Open</button>
         </section>
 
-        <!-- HALAMAN 2 -->
-        <section id="page2">
+        <section class="light-page">
+            <!-- FOTO FLOATING -->
+            <div class="floating-photo photo-lg top-right delay-1">
+                <img src="image.png" alt="">
+            </div>
+
+            <div class="floating-photo photo-sm top-left delay-2">
+                <img src="image.png" alt="">
+            </div>
+
+            <div class="floating-photo photo-md bottom-left delay-3">
+                <img src="image.png" alt="">
+            </div>
+
+            <div class="floating-photo photo-sm bottom-right delay-4">
+                <img src="image.png" alt="">
+            </div>
             <div class="message-box">
-                <h2>Dear Someone,</h2>
-                <br>
-                <p>Ini adalah halaman kedua. Kamu bisa mengisi teks ungkapan perasaan atau harapan terbaikmu di sini. Tampilannya bersih agar pesanmu lebih mudah menyentuh hati.</p>
-                <br>
-                <p>Swipe up untuk lanjut!</p>
+                <p>
+                    Hari ini semesta sedang merayakan seseorang yang diam-diam menjadi alasan banyak bahagiaku lahir. Selamat ulang tahun, sayang. Semoga langkahmu selalu dipeluk hal-hal baik, semoga hatimu tetap hangat meski dunia kadang tidak ramah.
+                <p>
+                    Swipe up atau scroll untuk lanjut.
+                </p>
             </div>
-            <div class="swipe-icon" onclick="nextPage(2)" style="color: #f5576c;">
+            <div class="swipe-icon">
                 <i class="fa-solid fa-angles-up"></i>
-                <p style="font-size: 0.8rem; margin-top: 5px;">Swipe Up</p>
             </div>
         </section>
 
-        <!-- HALAMAN 3 -->
-        <section id="page3">
-            <!-- Halaman Kosong Warna Muda -->
-            <div class="swipe-icon" onclick="nextPage(3)" style="color: #f5576c;">
+        <section class="pink-page">
+            <div class="message-box">
+                <p>
+                    Sejak mengenalmu, aku mulai percaya bahwa rumah tidak selalu tentang tempat, kadang bisa berupa seseorang. Dan bagiku, kamu adalah tenang yang datang setelah hari-hari panjang. Cara kamu hadir membuat hidup terasa lebih lembut dari sebelumnya.
+                </p>
+            </div>
+            <div class="swipe-icon">
                 <i class="fa-solid fa-angles-up"></i>
-                <p style="font-size: 0.8rem; margin-top: 5px;">Swipe Up</p>
             </div>
         </section>
 
-        <!-- HALAMAN 4 (Blank) -->
-        <section id="page4" style="background: white;"></section>
+        <section class="light-page">
+            <div class="message-box">
+                <p>
+                    Aku tahu hidup tidak selalu berjalan seperti yang kita mau. Akan ada hari-hari yang melelahkan, langit yang terlalu bising, dan hati yang ingin menyerah. Tapi kalau nanti itu terjadi, izinkan aku tetap ada di sisimu.
+                </p>
+            </div>
+            <div class="swipe-icon">
+                <i class="fa-solid fa-angles-up"></i>
+            </div>
+        </section>
+
+        <section class="pink-page">
+            <div class="message-box">
+                <p>
+                    Di usiamu yang baru ini, aku tidak meminta banyak pada semesta selain menjaga kamu tetap bahagia. Karena bagiku, melihat matamu berbinar adalah bentuk keindahan paling sederhana namun berarti. Semoga aku masih menjadi seseorang yang berjalan di sampingmu dalam waktu yang panjang.
+                </p>
+            </div>
+
+            <div class="swipe-icon">
+                <i class="fa-solid fa-angles-up"></i>
+            </div>
+        </section>
+
+        <section class="light-page">
+            <div class="message-box">
+                <h1 style="font-size:3rem;color:#f5576c;"> ❤️ </h1>
+                <p>Once again...</p>
+                <h2 style="color:#f5576c;font-weight:600;">
+                    Happy Birthday My Love
+                </h2>
+            </div>
+        </section>
     </div>
 
     <script>
-        // Fungsi Confetti
-        function shootConfetti() {
-            var duration = 5 * 1000; // Durasi confetti 5 detik
-            var end = Date.now() + duration;
 
-            (function frame() {
-                confetti({
-                    particleCount: 3,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0, y: 0.6 },
-                    colors: ['#ffffff', '#f5576c', '#f093fb']
-                });
-                confetti({
-                    particleCount: 3,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1, y: 0.6 },
-                    colors: ['#ffffff', '#f5576c', '#f093fb']
-                });
+        const container = document.getElementById('mainContainer');
+        const sections = document.querySelectorAll('section');
+        let currentPage = 0;
+        let isAnimating = false;
+        const totalPages = sections.length;
 
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
-            }());
-        }
-
-        // Jalankan saat halaman pertama kali dibuka/reload
-        window.onload = () => {
-            // Munculkan teks
-            document.querySelector('#page1 h1').classList.add('show');
-            // Langsung nyalakan confetti
-            shootConfetti();
-        };
-
-        function nextPage(currentPage) {
-            const container = document.getElementById('mainContainer');
+        function showPage(index){
+            if(isAnimating) return;
+            if(index < 0 || index >= totalPages) return;
+            isAnimating = true;
+            currentPage = index;
             container.style.transform = `translateY(-${currentPage * 100}vh)`;
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            sections[currentPage]
+                .classList.add('active');
+            setTimeout(() => {
+                isAnimating = false;
+            }, 900);
         }
 
-        // Support swipe gesture sederhana
-        let touchstartY = 0;
-        let touchendY = 0;
+        function nextPage(){
+            showPage(currentPage + 1);
+        }
 
-        document.addEventListener('touchstart', e => { touchstartY = e.changedTouches[0].screenY; });
-        document.addEventListener('touchend', e => { 
-            touchendY = e.changedTouches[0].screenY;
+        function prevPage(){
+            showPage(currentPage - 1);
+        }
+
+        document
+            .querySelector('.btn-open')
+            .addEventListener('click', nextPage);
+
+        document
+            .querySelectorAll('.swipe-icon')
+            .forEach(icon => {
+
+                icon.addEventListener('click', nextPage);
+
+            });
+
+        let wheelTimeout;
+        window.addEventListener('wheel', (e) => {
+            clearTimeout(wheelTimeout);
+            wheelTimeout = setTimeout(() => {
+                if(e.deltaY > 0){
+                    nextPage();
+                }else{
+                    prevPage();
+                }
+            }, 50);
+        }, { passive:true });
+
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        window.addEventListener('touchstart', (e) => {
+            touchStartY =
+                e.changedTouches[0].screenY;
+        });
+
+        window.addEventListener('touchend', (e) => {
+            touchEndY =
+                e.changedTouches[0].screenY;
             handleGesture();
         });
 
-        function handleGesture() {
-            if (touchstartY - touchendY > 100) { 
-                // Logika swipe sederhana untuk pindah antar halaman
-                const container = document.getElementById('mainContainer');
-                const currentTransform = container.style.transform || "translateY(0vh)";
-                const currentY = parseInt(currentTransform.replace(/[^\d.-]/g, '')) || 0;
-                
-                if (currentY > -300) { // Batasi sampai halaman terakhir
-                    container.style.transform = `translateY(${currentY - 100}vh)`;
-                }
+        function handleGesture(){
+            const swipeDistance =
+                touchStartY - touchEndY;
+            if(swipeDistance > 80){
+                nextPage();
+            }
+
+            if(swipeDistance < -80){
+                prevPage();
             }
         }
+
+        window.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowDown'){
+                nextPage();
+            }
+
+            if(e.key === 'ArrowUp'){
+                prevPage();
+            }
+        });
+
+        function shootConfetti(){
+            const duration = 5 * 1000;
+            const end = Date.now() + duration;
+            (function frame(){
+                confetti({
+                    particleCount:3,
+                    angle:60,
+                    spread:55,
+                    origin:{ x:0, y:0.6 },
+                    colors:[
+                        '#ffffff',
+                        '#f5576c',
+                        '#f093fb'
+                    ]
+                });
+
+                confetti({
+                    particleCount:3,
+                    angle:120,
+                    spread:55,
+                    origin:{ x:1, y:0.6 },
+                    colors:[
+                        '#ffffff',
+                        '#f5576c',
+                        '#f093fb'
+                    ]
+                });
+
+                if(Date.now() < end){
+                    requestAnimationFrame(frame);
+                }
+            })();
+        }
+
+        window.onload = () => {
+            document
+                .querySelectorAll('.hidden')
+                .forEach(el => {
+                    setTimeout(() => {
+                        el.classList.add('show');
+                    }, 300);
+                });
+            shootConfetti();
+        };
     </script>
 </body>
 </html>
